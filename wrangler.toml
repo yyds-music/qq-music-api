@@ -13,6 +13,7 @@ database_id = "0eb000e7-4400-4d59-b087-96a5d777e92e"
 crons = ["0 * * * *"]
 
 
+# 开启日志
 [observability]
 [observability.logs]
 enabled = true
