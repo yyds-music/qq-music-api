@@ -83,13 +83,31 @@ export async function onRequest(context) {
 
         // 处理普通歌词 (LRC)
         if (data.lyric) {
-            const lyricContent = base64Decode(data.lyric);
+            let lyricContent = base64Decode(data.lyric);
+            // 如果不是以 [ 开头，说明是加密的 Hex 格式，需要解密
+            if (lyricContent && !lyricContent.startsWith('[')) {
+                try {
+                    const decrypted = await qrc_decrypt(lyricContent);
+                    if (decrypted) lyricContent = decrypted;
+                } catch (e) {
+                    console.warn("LRC 歌词解密失败:", e);
+                }
+            }
             result.data.lyric = lyricContent;
         }
 
         // 处理翻译歌词
         if (data.trans) {
-            const transContent = base64Decode(data.trans);
+            let transContent = base64Decode(data.trans);
+            // 如果不是以 [ 开头，说明是加密的 Hex 格式，需要解密
+            if (transContent && !transContent.startsWith('[')) {
+                try {
+                    const decrypted = await qrc_decrypt(transContent);
+                    if (decrypted) transContent = decrypted;
+                } catch (e) {
+                    console.warn("翻译歌词解密失败:", e);
+                }
+            }
             result.data.trans = transContent;
         }
 
@@ -105,7 +123,16 @@ export async function onRequest(context) {
 
         // 处理罗马音歌词
         if (data.roma) {
-            const romaContent = base64Decode(data.roma);
+            let romaContent = base64Decode(data.roma);
+            // 如果不是以 [ 开头，说明是加密的 Hex 格式，需要解密
+            if (romaContent && !romaContent.startsWith('[')) {
+                try {
+                    const decrypted = await qrc_decrypt(romaContent);
+                    if (decrypted) romaContent = decrypted;
+                } catch (e) {
+                    console.warn("罗马音歌词解密失败:", e);
+                }
+            }
             result.data.roma = romaContent;
         }
 
