@@ -31,7 +31,7 @@ async function refreshCredential(credential) {
         refresh_key: credential.refresh_key,
         refresh_token: credential.refresh_token,
         musickey: credential.musickey,
-        musicid: credential.musicid,
+        musicid: parseInt(credential.musicid) || 0,  // 必须是整数
     };
 
     // 构建 common 参数，确保 tmeLoginType 与凭证中的 login_type 一致

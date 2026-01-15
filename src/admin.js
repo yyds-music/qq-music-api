@@ -18,6 +18,58 @@ export async function onRequest(context) {
         return new Response(null, { headers: corsHeaders });
     }
 
+    // POST - 更新凭证
+    if (request.method === "POST") {
+        if (!env.DB) {
+            return new Response(JSON.stringify({ error: "D1 database not bound" }), {
+                status: 503,
+                headers: { "Content-Type": "application/json", ...corsHeaders }
+            });
+        }
+
+        try {
+            const body = await request.json();
+
+            // 支持两种格式: { credential: {...} } 或直接 {...}
+            const credentialData = body.credential || body;
+
+            if (!credentialData.musicid || !credentialData.musickey) {
+                return new Response(JSON.stringify({ error: "缺少 musicid 或 musickey" }), {
+                    status: 400,
+                    headers: { "Content-Type": "application/json", ...corsHeaders }
+                });
+            }
+
+            await ensureCredentialTable(env.DB);
+
+            // 解析并保存凭证
+            const credential = parseCredential(JSON.stringify(credentialData));
+            if (!credential) {
+                return new Response(JSON.stringify({ error: "凭证格式无效" }), {
+                    status: 400,
+                    headers: { "Content-Type": "application/json", ...corsHeaders }
+                });
+            }
+
+            await saveCredentialToDB(env.DB, credential);
+
+            return new Response(JSON.stringify({
+                success: true,
+                message: "凭证已更新",
+                musicid: credential.musicid
+            }), {
+                status: 200,
+                headers: { "Content-Type": "application/json", ...corsHeaders }
+            });
+        } catch (err) {
+            return new Response(JSON.stringify({ error: err.message }), {
+                status: 500,
+                headers: { "Content-Type": "application/json", ...corsHeaders }
+            });
+        }
+    }
+
+    // GET - 显示状态页面
     // 检查数据库绑定
     const dbStatus = env.DB ? "✅ 已绑定" : "❌ 未绑定";
     const credentialStatus = env.INITIAL_CREDENTIAL ? "✅ 已设置" : "❌ 未设置";
