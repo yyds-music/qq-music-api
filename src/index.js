@@ -9,6 +9,7 @@ import * as refresh from "./api/refresh.js";
 import * as search from "./api/search.js";
 import * as songUrl from "./api/song/url.js";
 import * as songDetail from "./api/song/detail.js";
+import * as cover from "./api/cover.js";
 import * as lyric from "./api/lyric.js";
 import * as album from "./api/album.js";
 import * as playlist from "./api/playlist.js";
@@ -31,6 +32,7 @@ const routes = {
     "/api/search": search,
     "/api/song/url": songUrl,
     "/api/song/detail": songDetail,
+    "/api/song/cover": cover,
     "/api/lyric": lyric,
     "/api/album": album,
     "/api/playlist": playlist,
@@ -77,6 +79,7 @@ const indexHtml = `<!DOCTYPE html>
     <h2>歌曲</h2>
     <div class="e"><div class="h"><span class="m">GET</span><span class="p">/api/song/url</span></div><p class="d">获取歌曲播放链接</p><table><tr><th>参数</th><th>类型</th><th>说明</th></tr><tr><td><span class="pm">mid</span><span class="r">*</span></td><td>string</td><td>歌曲MID，多个用逗号分隔</td></tr><tr><td><span class="pm">quality</span></td><td>string</td><td>128/320/flac</td></tr></table><div class="ex">GET /api/song/url?mid=0039MnYb0qxYhV&quality=320</div></div>
     <div class="e"><div class="h"><span class="m">GET</span><span class="p">/api/song/detail</span></div><p class="d">获取歌曲详情</p><table><tr><th>参数</th><th>类型</th><th>说明</th></tr><tr><td><span class="pm">mid</span></td><td>string</td><td>歌曲MID</td></tr><tr><td><span class="pm">id</span></td><td>int</td><td>歌曲ID</td></tr></table><div class="ex">GET /api/song/detail?mid=0039MnYb0qxYhV</div></div>
+    <div class="e"><div class="h"><span class="m">GET</span><span class="p">/api/song/cover</span></div><p class="d">获取歌曲封面（支持 mid 自动处理、album_mid 和 vs 值回退）</p><table><tr><th>参数</th><th>类型</th><th>说明</th></tr><tr><td><span class="pm">mid</span></td><td>string</td><td>歌曲MID（自动获取详情）</td></tr><tr><td><span class="pm">album_mid</span></td><td>string</td><td>专辑MID</td></tr><tr><td><span class="pm">vs</span></td><td>string</td><td>vs值数组（JSON或逗号分隔）</td></tr><tr><td><span class="pm">size</span></td><td>int</td><td>150/300/500/800</td></tr><tr><td><span class="pm">validate</span></td><td>bool</td><td>是否验证(默认true)</td></tr></table><div class="ex">GET /api/song/cover?mid=0039MnYb0qxYhV&size=300</div></div>
     <h2>歌词</h2>
     <div class="e"><div class="h"><span class="m">GET</span><span class="p">/api/lyric</span></div><p class="d">获取歌词(LRC/QRC自动解密)</p><table><tr><th>参数</th><th>类型</th><th>说明</th></tr><tr><td><span class="pm">mid</span></td><td>string</td><td>歌曲MID</td></tr><tr><td><span class="pm">id</span></td><td>int</td><td>歌曲ID</td></tr></table><div class="ex">GET /api/lyric?mid=0039MnYb0qxYhV</div></div>
     <h2>专辑/歌单/歌手</h2>
