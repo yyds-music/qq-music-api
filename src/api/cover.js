@@ -3,8 +3,8 @@
  * 获取歌曲封面URL，支持 mid 自动处理、album_mid 和 vs 值回退
  */
 
-import { apiRequest, jsonResponse, errorResponse, handleOptions } from "../../lib/request.js";
-import { ensureCredentialTable, getCredentialFromDB, parseCredential, saveCredentialToDB } from "../../lib/credential.js";
+import { apiRequest, jsonResponse, errorResponse, handleOptions } from "../lib/request.js";
+import { ensureCredentialTable, getCredentialFromDB, parseCredential, saveCredentialToDB } from "../lib/credential.js";
 
 const DEFAULT_COVER = "https://y.gtimg.cn/music/photo_new/T002R800x800M000003y8dsH2wBHlo_1.jpg";
 
