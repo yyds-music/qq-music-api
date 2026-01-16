@@ -50,6 +50,7 @@ Fork 此仓库到你的 GitHub 账户。
 | `/api/search?keyword=xxx` | 搜索歌曲/歌手/专辑/歌单 |
 | `/api/song/url?mid=xxx` | 获取歌曲播放链接 |
 | `/api/song/detail?mid=xxx` | 获取歌曲详情 |
+| `/api/song/cover?mid=xxx` | 获取歌曲封面 |
 | `/api/lyric?mid=xxx` | 获取歌词 |
 | `/api/album?mid=xxx` | 获取专辑详情 |
 | `/api/playlist?id=xxx` | 获取歌单详情 |
