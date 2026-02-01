@@ -16,6 +16,7 @@ import * as playlist from "./api/playlist.js";
 import * as singer from "./api/singer.js";
 import * as top from "./api/top.js";
 import * as admin from "./admin.js";
+import { ensureStatsTable, incrementCount, getTotalCount } from "./lib/stats.js";
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -41,8 +42,25 @@ const routes = {
     "/admin": admin,
 };
 
-// 首页 HTML (内联)
-const indexHtml = `<!DOCTYPE html>
+// 需要统计的 API 端点
+const statsEndpoints = [
+    "/api/search",
+    "/api/song/url",
+    "/api/song/detail",
+    "/api/song/cover",
+    "/api/lyric",
+    "/api/album",
+    "/api/playlist",
+    "/api/singer",
+    "/api/top",
+];
+
+/**
+ * 生成首页 HTML
+ * @param {number} totalCount 
+ */
+function generateIndexHtml(totalCount) {
+    return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -54,6 +72,7 @@ const indexHtml = `<!DOCTYPE html>
         .c{max-width:800px;margin:0 auto;padding:40px 20px}
         h1{font-size:2rem;color:#fff;margin-bottom:8px}
         .s{color:#666;margin-bottom:40px}
+        .s .count{color:#31c27c;font-weight:600}
         h2{font-size:1.1rem;color:#31c27c;margin:30px 0 15px;border-bottom:1px solid #333;padding-bottom:8px}
         .e{background:#222;border-radius:8px;padding:16px;margin-bottom:16px}
         .h{display:flex;align-items:center;gap:10px;margin-bottom:10px}
@@ -73,7 +92,8 @@ const indexHtml = `<!DOCTYPE html>
 <body>
 <div class="c">
     <h1>QQ Music API</h1>
-    <p class="s">基于 Cloudflare Workers + D1 的 QQ 音乐 API 服务</p>
+    <p class="s">基于 Cloudflare Workers + D1 的 QQ 音乐 API 服务 · 累计调用 <span class="count">${totalCount.toLocaleString()}</span> 次</p>
+    
     <h2>搜索</h2>
     <div class="e"><div class="h"><span class="m">GET</span><span class="p">/api/search</span></div><p class="d">搜索歌曲、歌手、专辑或歌单</p><table><tr><th>参数</th><th>类型</th><th>说明</th></tr><tr><td><span class="pm">keyword</span><span class="r">*</span></td><td>string</td><td>搜索关键词</td></tr><tr><td><span class="pm">type</span></td><td>string</td><td>song/singer/album/playlist</td></tr><tr><td><span class="pm">num</span></td><td>int</td><td>返回数量</td></tr><tr><td><span class="pm">page</span></td><td>int</td><td>页码</td></tr></table><div class="ex">GET /api/search?keyword=周杰伦&type=song&num=20</div></div>
     <h2>歌曲</h2>
@@ -92,6 +112,7 @@ const indexHtml = `<!DOCTYPE html>
 </div>
 </body>
 </html>`;
+}
 
 export default {
     async fetch(request, env, ctx) {
@@ -103,9 +124,28 @@ export default {
             return new Response(null, { headers: corsHeaders });
         }
 
-        // 静态首页
+        // 确保统计表存在
+        if (env.DB) {
+            try {
+                await ensureStatsTable(env.DB);
+            } catch (e) {
+                console.error("初始化统计表失败:", e);
+            }
+        }
+
+        // 静态首页 - 动态生成包含统计数据
         if (path === "/" || path === "/index.html") {
-            return new Response(indexHtml, {
+            let totalCount = 0;
+
+            if (env.DB) {
+                try {
+                    totalCount = await getTotalCount(env.DB);
+                } catch (e) {
+                    console.error("获取统计数据失败:", e);
+                }
+            }
+
+            return new Response(generateIndexHtml(totalCount), {
                 headers: {
                     "Content-Type": "text/html; charset=utf-8",
                     ...corsHeaders,
@@ -113,9 +153,15 @@ export default {
             });
         }
 
+
         // API 路由
         const handler = routes[path];
         if (handler && handler.onRequest) {
+            // 统计 API 调用次数 (异步，不阻塞响应)
+            if (env.DB && statsEndpoints.includes(path)) {
+                ctx.waitUntil(incrementCount(env.DB, path));
+            }
+
             return handler.onRequest({ request, env, ctx });
         }
 
