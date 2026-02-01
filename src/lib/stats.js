@@ -27,7 +27,7 @@ export async function incrementCount(db, endpoint) {
             ON CONFLICT(endpoint) DO UPDATE SET count = count + 1
         `).bind(endpoint).run();
     } catch (e) {
-        console.error("统计计数失败:", e);
+        console.error(`[Stats] Increment failed for ${endpoint}:`, e);
     }
 }
 

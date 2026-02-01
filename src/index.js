@@ -131,6 +131,8 @@ export default {
             } catch (e) {
                 console.error("初始化统计表失败:", e);
             }
+        } else {
+            console.error("env.DB is undefined!");
         }
 
         // 静态首页 - 动态生成包含统计数据
@@ -153,13 +155,18 @@ export default {
             });
         }
 
-
         // API 路由
         const handler = routes[path];
         if (handler && handler.onRequest) {
-            // 统计 API 调用次数 (异步，不阻塞响应)
+            // 统计 API 调用次数
             if (env.DB && statsEndpoints.includes(path)) {
-                ctx.waitUntil(incrementCount(env.DB, path));
+                // 在本地开发或无 waitUntil 支持的环境下，直接 await
+                // 为了确保计数准确，这里改为 await，虽然会微弱增加响应时间
+                try {
+                    await incrementCount(env.DB, path);
+                } catch (e) {
+                    console.error("统计计数失败:", e);
+                }
             }
 
             return handler.onRequest({ request, env, ctx });
