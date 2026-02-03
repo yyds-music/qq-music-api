@@ -37,6 +37,8 @@ Fork 此仓库到你的 GitHub 账户。
 4. Value: 粘贴你的凭证 JSON
 5. 点击 **Save and Deploy**
 
+> 凭证可用 [tooplick/qq-music-download](https://github.com/tooplick/qq-music-download) 登录获取
+
 ### 6. 初始化
 
 访问 `https://你的域名/admin` 初始化数据库。
