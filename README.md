@@ -2,6 +2,8 @@
 
 基于 Cloudflare Workers + D1 数据库的 QQ 音乐 API 服务。
 
+📖 **文档站**：[doc.ygking.top](https://doc.ygking.top)
+
 ## 🚀 部署 (Cloudflare Dashboard)
 
 ### 1. Fork 仓库

@@ -108,7 +108,7 @@ function generateIndexHtml(totalCount) {
     <div class="e"><div class="h"><span class="m">GET</span><span class="p">/api/singer</span></div><p class="d">获取歌手信息</p><div class="ex">GET /api/singer?mid=0025NhlN2yWrP4</div></div>
     <h2>排行榜</h2>
     <div class="e"><div class="h"><span class="m">GET</span><span class="p">/api/top</span></div><p class="d">获取排行榜列表或详情</p><div class="ex">GET /api/top</div><div class="ex">GET /api/top?id=4&num=50</div></div>
-    <footer><a href="https://github.com/tooplick/qq-music-api">GitHub</a></footer>
+    <footer><a href="https://doc.ygking.top">文档</a> · <a href="https://github.com/tooplick/qq-music-api">GitHub</a></footer>
 </div>
 </body>
 </html>`;
