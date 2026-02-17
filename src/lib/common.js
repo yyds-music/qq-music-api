@@ -74,6 +74,9 @@ export const API_CONFIG = {
  * 歌曲文件类型映射
  */
 export const SongFileType = {
+    MASTER: { s: "AI00", e: ".flac" },
+    ATMOS_2: { s: "Q000", e: ".flac" },
+    ATMOS_51: { s: "Q001", e: ".flac" },
     FLAC: { s: "F000", e: ".flac" },
     MP3_320: { s: "M800", e: ".mp3" },
     MP3_128: { s: "M500", e: ".mp3" },
@@ -122,6 +125,10 @@ export function parseSearchType(type) {
  */
 export function parseQuality(quality) {
     const qualityMap = {
+        master: SongFileType.MASTER,
+        atmos_2: SongFileType.ATMOS_2,
+        atmos: SongFileType.ATMOS_2,
+        atmos_51: SongFileType.ATMOS_51,
         flac: SongFileType.FLAC,
         320: SongFileType.MP3_320,
         128: SongFileType.MP3_128,

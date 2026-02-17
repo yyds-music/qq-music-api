@@ -10,7 +10,7 @@ import { ensureCredentialTable, getCredentialFromDB, parseCredential, saveCreden
 /**
  * 音质降级顺序
  */
-const QUALITY_FALLBACK = ["flac", "320", "128"];
+const QUALITY_FALLBACK = ["master", "atmos_2", "atmos_51", "flac", "320", "128"];
 
 /**
  * 获取凭证

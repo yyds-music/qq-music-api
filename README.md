@@ -50,7 +50,7 @@ Fork 此仓库到你的 GitHub 账户。
 | 端点 | 说明 |
 |------|------|
 | `/api/search?keyword=xxx` | 搜索歌曲/歌手/专辑/歌单 |
-| `/api/song/url?mid=xxx&quality=flac` | 获取歌曲播放链接 (quality: flac/320/128，默认 flac，自动降级) |
+| `/api/song/url?mid=xxx&quality=flac` | 获取歌曲播放链接 (quality: master/atmos/atmos_51/flac/320/128，默认 flac，自动降级) |
 | `/api/song/detail?mid=xxx` | 获取歌曲详情 |
 | `/api/song/cover?mid=xxx` | 获取歌曲封面 |
 | `/api/lyric?mid=xxx&qrc=1&trans=1` | 获取歌词 (支持参数: qrc(逐字), trans(翻译), roma(罗马音)) |
@@ -59,6 +59,19 @@ Fork 此仓库到你的 GitHub 账户。
 | `/api/singer?mid=xxx` | 获取歌手信息 |
 | `/api/top` | 获取排行榜 |
 | `/admin` | 数据库初始化 |
+
+### 音质参数说明
+
+| quality 参数 | 音质 | 格式 |
+|-------------|------|------|
+| `master` | 臻品母带 24Bit 192kHz | .flac |
+| `atmos` / `atmos_2` | 臻品全景声 16Bit 44.1kHz | .flac |
+| `atmos_51` | 臻品音质 16Bit 44.1kHz | .flac |
+| `flac` | FLAC 无损 16Bit~24Bit | .flac |
+| `320` | MP3 320kbps | .mp3 |
+| `128` | MP3 128kbps | .mp3 |
+
+> 默认 `flac`，当请求音质不可用时自动按上表从上到下降级。
 
 ---
 
